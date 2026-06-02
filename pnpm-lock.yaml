@@ -80,6 +80,9 @@ importers:
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
+      mouse-animations:
+        specifier: ^1.0.0
+        version: 1.0.0
       overlayscrollbars:
         specifier: ^2.12.0
         version: 2.12.0
@@ -3841,6 +3844,15 @@ packages:
 
   morphdom@2.7.5:
     resolution: {integrity: sha512-z6bfWFMra7kBqDjQGHud1LSXtq5JJC060viEkQFMBX6baIecpkNr2Ywrn2OQfWP3rXiNFQRPoFjD8/TvJcWcDg==}
+
+  mouse-animations@1.0.0:
+    resolution: {integrity: sha512-WgDjdt1AMw5fNKYWDW8mWiys9XPHa+4V43MR/Mur/wopZQ64glyHqP2+tiptHKqNQBMWaKo6/hc1F0Zvcw1aFg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      jquery: '>=3.0.0'
+    peerDependenciesMeta:
+      jquery:
+        optional: true
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -9907,6 +9919,8 @@ snapshots:
       ufo: 1.6.1
 
   morphdom@2.7.5: {}
+
+  mouse-animations@1.0.0: {}
 
   mri@1.2.0: {}
 

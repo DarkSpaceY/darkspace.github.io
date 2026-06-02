@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
   import { Invert } from "mouse-animations";
+  import { onDestroy, onMount } from "svelte";
 
   const BASE_SIZE = 40;
   const HOVER_SIZE = 100;
