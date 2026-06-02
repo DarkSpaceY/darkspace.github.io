@@ -9,12 +9,11 @@
     src: string;
   }
 
-  const kuGouId = "1716967559";
+  const searchKeyword = "古风";
 
   let songs = $state<Song[]>([]);
   let loading = $state(true);
   let error = $state(false);
-  let playlistName = $state("");
 
   let currentIndex = $state(0);
   let isPlaying = $state(false);
@@ -99,30 +98,18 @@
 
   async function fetchSongs() {
     try {
-      const plRes = await fetch(
-        `https://api-hot.ikutuga.com/kugou/user/playlist?userid=${kuGouId}&page=1&pagesize=1`,
-        { signal: AbortSignal.timeout(5000) },
-      );
-      if (!plRes.ok) throw new Error("Playlist API failed");
-      const plData = await plRes.json();
-      const firstPl = plData?.data?.info?.[0];
-      if (!firstPl) throw new Error("No playlist found");
-
-      playlistName = firstPl.specialname || "我的歌单";
-      const plId = firstPl.specialid;
-
-      const songRes = await fetch(
-        `https://api.i-meto.com/meting/api?server=kugou&type=playlist&id=${plId}`,
+      const res = await fetch(
+        `https://api.i-meto.com/meting/api?server=kugou&type=search&id=${encodeURIComponent(searchKeyword)}`,
         { signal: AbortSignal.timeout(8000) },
       );
-      if (!songRes.ok) throw new Error("Meting API failed");
-      const songData = await songRes.json();
+      if (!res.ok) throw new Error("API failed");
+      const data = await res.json();
 
-      if (!Array.isArray(songData) || songData.length === 0) {
-        throw new Error("No songs in playlist");
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error("No results");
       }
 
-      songs = songData
+      songs = data
         .filter((s: any) => s.url)
         .map((s: any) => ({
           title: s.title || "未知歌曲",
@@ -139,9 +126,7 @@
 
 <div class="card-base p-3 onload-animation" style="animation-delay: 75ms">
   <div class="text-sm font-bold text-75 mb-2 flex items-center gap-1.5">
-    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-    </svg>
+    <Icon icon="material-symbols:music-note-rounded" class="w-4 h-4" />
     播放器
   </div>
 
@@ -154,11 +139,13 @@
       暂无歌曲数据
     </div>
   {:else}
-    <div class="text-[10px] text-50 mb-2 truncate">{playlistName}</div>
+    <div class="text-[10px] text-50 mb-2 truncate">酷狗音乐 · 搜索「{searchKeyword}」</div>
 
     <div class="flex items-center gap-3 mb-3">
       <img
-        src={currentTrack.cover || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3C/svg%3E"}
+        src={currentTrack.cover
+          ? currentTrack.cover
+          : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect fill='%23222' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23555' font-size='18'%3E♪%3C/text%3E%3C/svg%3E"}
         alt={currentTrack.title}
         class="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-[var(--btn-regular-bg)]"
         class:opacity-70={!isPlaying}
@@ -212,20 +199,19 @@
     </div>
 
     <div class="border-t border-[var(--line-color)] pt-2">
-      <div class="text-[10px] text-50 mb-1 flex justify-between">
-        <span>歌单 ({songs.length}首)</span>
-      </div>
-      <div class="max-h-32 overflow-y-auto space-y-0.5">
+      <div class="text-[10px] text-50 mb-1">歌单 ({songs.length}首)</div>
+      <div class="max-h-32 overflow-y-auto">
         {#each songs as song, i}
           <button
             onclick={() => playIndex(i)}
-            class="w-full flex items-center gap-2 text-left py-0.5 px-1 rounded hover:bg-[var(--btn-regular-bg)] transition-colors"
+            class="w-full flex items-center gap-2 text-left py-1 px-1 rounded hover:bg-[var(--btn-regular-bg)] transition-colors"
             class:bg-[var(--btn-regular-bg)]={i === currentIndex}
           >
             <span class="text-[10px] text-50 w-4 text-right flex-shrink-0">{i + 1}</span>
             <span class="text-[10px] truncate flex-1" class:text-[var(--primary)]={i === currentIndex} class:text-75={i !== currentIndex}>
               {song.title}
             </span>
+            <span class="text-[10px] text-50 truncate max-w-[60px] flex-shrink-0">{song.artist}</span>
           </button>
         {/each}
       </div>
