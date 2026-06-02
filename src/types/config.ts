@@ -48,6 +48,7 @@ export enum LinkPreset {
 	Home = 0,
 	Archive = 1,
 	About = 2,
+	Projects = 3,
 }
 
 export type NavBarLink = {
@@ -75,6 +76,20 @@ export type LicenseConfig = {
 	enable: boolean;
 	name: string;
 	url: string;
+};
+
+export type GiscusConfig = {
+	enable: boolean;
+	repo: string;
+	repoId: string;
+	category: string;
+	categoryId: string;
+	mapping: "pathname" | "url" | "title" | "og:title";
+	strict: boolean;
+	reactionsEnabled: boolean;
+	emitMetadata: boolean;
+	inputPosition: "top" | "bottom";
+	lang: string;
 };
 
 export type LIGHT_DARK_MODE =

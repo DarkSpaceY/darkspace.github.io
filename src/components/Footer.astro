@@ -1,5 +1,5 @@
 ---
-
+import Busuanzi from "./widget/Busuanzi.astro";
 import { profileConfig } from "../config";
 import { url } from "../utils/url-utils";
 
@@ -18,4 +18,5 @@ const currentYear = new Date().getFullYear();
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://astro.build">Astro</a> &
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/saicaca/fuwari">Fuwari</a>
     </div>
+    <Busuanzi />
 </div>

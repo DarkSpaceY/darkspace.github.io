@@ -32,6 +32,12 @@ enum I18nKey {
 	author = "author",
 	publishedAt = "publishedAt",
 	license = "license",
+
+	projects = "projects",
+	links = "links",
+	allPosts = "allPosts",
+
+	switchLang = "switchLang",
 }
 
 export default I18nKey;

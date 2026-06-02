@@ -1,0 +1,140 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { setSafeLocale } from "@i18n/locale";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+
+const locale = "zh";
+setSafeLocale(locale);
+
+interface Project {
+	name: string;
+	description: string;
+	url: string;
+	lang: string;
+	stars: number;
+}
+
+interface ProjectCategory {
+	name: string;
+	icon: string;
+	projects: Project[];
+}
+
+const categories: ProjectCategory[] = [
+	{
+		name: "航天模拟器",
+		icon: "🚀",
+		projects: [
+			{
+				name: "PySFS",
+				description: "Spaceflight Simulator 的 Python 工具库",
+				url: "https://github.com/DarkSpaceY/PySFS",
+				lang: "Python",
+				stars: 4,
+			},
+			{
+				name: "ConsoleMOD",
+				description: "SFS 模组，增加更多控制台命令",
+				url: "https://github.com/DarkSpaceY/ConsoleMOD",
+				lang: "C#",
+				stars: 1,
+			},
+			{
+				name: "FrameRateLockMod",
+				description: "Unity 模组，锁定帧率并同步物理时间步长",
+				url: "https://github.com/DarkSpaceY/FrameRateLockMod",
+				lang: "C#",
+				stars: 1,
+			},
+		],
+	},
+	{
+		name: "AI / LLM",
+		icon: "🤖",
+		projects: [
+			{
+				name: "Ollama-mindmap",
+				description: "基于本地 Ollama 模型的思维导图生成工具",
+				url: "https://github.com/DarkSpaceY/Ollama-mindmap",
+				lang: "Python",
+				stars: 3,
+			},
+			{
+				name: "Agent-WorkFlow",
+				description: "AI Agent 工作流框架",
+				url: "https://github.com/DarkSpaceY/Agent-WorkFlow",
+				lang: "Python",
+				stars: 3,
+			},
+			{
+				name: "NexLearn",
+				description: "AI for Education - 交互式学习应用（v2.0 开发中）",
+				url: "https://github.com/DarkSpaceY/NexLearn",
+				lang: "TypeScript",
+				stars: 1,
+			},
+		],
+	},
+	{
+		name: "其他",
+		icon: "💡",
+		projects: [],
+	},
+];
+
+const langColors: Record<string, string> = {
+	Python: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+	"C#": "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+	TypeScript: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300",
+};
+---
+
+<MainGridLayout title={i18n(I18nKey.projects, locale)} description={i18n(I18nKey.projects, locale)}>
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+        <h1 class="text-2xl font-bold mb-8 text-90">
+            {i18n(I18nKey.projects, locale)}
+            <span class="block text-sm font-normal text-50 mt-1">一些我做过的和正在做的东西</span>
+        </h1>
+
+        {
+            categories.filter(c => c.projects.length > 0).map((category) => (
+                <div class="mb-8 last:mb-0">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xl">{category.icon}</span>
+                        <h2 class="text-lg font-semibold text-90">{category.name}</h2>
+                        <span class="text-xs text-30 ml-auto">{category.projects.length} 个项目</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {category.projects.map((project) => (
+                            <a
+                                href={project.url}
+                                target="_blank"
+                                class="btn-card rounded-xl p-4 hover:scale-[1.02] active:scale-95 transition-all flex flex-col gap-2"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <div class="font-semibold text-90">{project.name}</div>
+                                    <div class="flex items-center gap-1 text-xs text-50">
+                                        <span>★</span>
+                                        <span>{project.stars}</span>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-50 leading-relaxed">{project.description}</div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class={"text-xs px-2 py-0.5 rounded-full font-medium " + (langColors[project.lang] || "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300")}>
+                                        {project.lang}
+                                    </span>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            ))
+        }
+
+        <div class="mt-8 pt-6 border-t border-[var(--btn-regular-bg)] text-center text-30 text-sm">
+            还有更多项目在本地躺着，慢慢整理中...
+        </div>
+    </div>
+</MainGridLayout>

@@ -35,4 +35,10 @@ export const zh_TW: Translation = {
 	[Key.author]: "作者",
 	[Key.publishedAt]: "發佈於",
 	[Key.license]: "許可協議",
+
+	[Key.projects]: "專案",
+	[Key.links]: "友鏈",
+	[Key.allPosts]: "全部文章",
+
+	[Key.switchLang]: "English",
 };

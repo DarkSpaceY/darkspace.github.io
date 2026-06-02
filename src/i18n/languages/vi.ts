@@ -35,4 +35,10 @@ export const vi: Translation = {
 	[Key.author]: "Tác giả",
 	[Key.publishedAt]: "Đăng vào lúc",
 	[Key.license]: "Giấy phép bản quyền",
+
+	[Key.projects]: "Dự án",
+	[Key.links]: "Liên kết",
+	[Key.allPosts]: "Tất cả bài viết",
+
+	[Key.switchLang]: "English",
 };

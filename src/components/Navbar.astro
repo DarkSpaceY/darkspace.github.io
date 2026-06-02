@@ -1,15 +1,32 @@
 ---
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "../config";
-import { LinkPresets } from "../constants/link-presets";
+import { getLinkPresets } from "../constants/link-presets";
 import { LinkPreset, type NavBarLink } from "../types/config";
 import { url } from "../utils/url-utils";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
 import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import Search from "./Search.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const className = Astro.props.class;
+
+const pathParts = Astro.url.pathname.split("/").filter(Boolean);
+const currentLocale = (pathParts[0] === "en" || pathParts[0] === "zh") ? pathParts[0] : "en";
+const otherLocale = currentLocale === "zh" ? "en" : "zh";
+
+// 构建语言切换URL - 如果有路径，则替换语言前缀；如果没有路径，则跳转到对应语言首页
+let switchLangUrl: string;
+if (pathParts.length > 0 && (pathParts[0] === "en" || pathParts[0] === "zh")) {
+    const restPath = pathParts.slice(1).join("/");
+    switchLangUrl = `/${otherLocale}/${restPath ? restPath + "/" : ""}`;
+} else {
+    switchLangUrl = `/${otherLocale}/`;
+}
+
+const LinkPresets = getLinkPresets(currentLocale);
 
 let links: NavBarLink[] = navBarConfig.links.map(
 	(item: NavBarLink | LinkPreset): NavBarLink => {
@@ -25,7 +42,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
     <div class:list={[
         className,
         "card-base !overflow-visible max-w-[var(--page-width)] h-[4.5rem] !rounded-t-none mx-auto flex items-center justify-between px-4"]}>
-        <a href={url('/')} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-5 font-bold active:scale-95">
+        <a href={url(`/${currentLocale}/`)} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-5 font-bold active:scale-95">
             <div class="flex flex-row text-[var(--primary)] items-center text-md">
                 <Icon name="material-symbols:home-outline-rounded" class="text-[1.75rem] mb-1 mr-2" />
                 {siteConfig.title}
@@ -44,6 +61,11 @@ let links: NavBarLink[] = navBarConfig.links.map(
             })}
         </div>
         <div class="flex">
+            <a aria-label={i18n(I18nKey.switchLang, currentLocale)} href={switchLangUrl}
+               class="btn-plain scale-animation rounded-lg h-11 px-3 font-bold text-sm active:scale-95 flex items-center"
+               data-no-swup>
+                {i18n(I18nKey.switchLang, currentLocale)}
+            </a>
             <!--<SearchPanel client:load>-->
             <Search client:only="svelte"></Search>
             {!siteConfig.themeColor.fixed && (
