@@ -105,14 +105,14 @@
 
 <div class="heatmap-wrapper">
   <div class="heatmap-header">
-    <div class="heatmap-title">
+    <div class="heatmap-title text-75">
       <svg class="gh-icon" viewBox="0 0 16 16" fill="currentColor">
         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
       </svg>
       GitHub Contributions
     </div>
     {#if !loading && !error}
-      <span class="heatmap-total">{totalContributions.toLocaleString()} contributions in the last year</span>
+      <span class="heatmap-total text-50">{totalContributions.toLocaleString()} contributions in the last year</span>
     {/if}
   </div>
 
@@ -122,7 +122,7 @@
     </div>
   {:else if error}
     <div class="heatmap-error">
-      <a href="https://github.com/{username}" target="_blank" rel="noopener noreferrer">
+      <a class="text-50" href="https://github.com/{username}" target="_blank" rel="noopener noreferrer">
         View contributions on GitHub →
       </a>
     </div>
@@ -133,13 +133,13 @@
         style="grid-template-columns: 28px repeat({colCount}, 12px); grid-template-rows: 16px repeat(7, 12px);"
       >
         {#each monthLabels as ml}
-          <span class="month-label" style="grid-column: {ml.index + 2}; grid-row: 1;">
+          <span class="month-label text-50" style="grid-column: {ml.index + 2}; grid-row: 1;">
             {ml.label}
           </span>
         {/each}
 
         {#each dayLabels as dl}
-          <span class="day-label" style="grid-column: 1; grid-row: {dl.row + 2};">
+          <span class="day-label text-50" style="grid-column: 1; grid-row: {dl.row + 2};">
             {dl.label}
           </span>
         {/each}
@@ -158,7 +158,7 @@
     </div>
 
     <div class="heatmap-footer">
-      <div class="legend">
+      <div class="legend text-50">
         <span>Less</span>
         <span class="cell l0"></span>
         <span class="cell l1"></span>
@@ -167,7 +167,7 @@
         <span class="cell l4"></span>
         <span>More</span>
       </div>
-      <a href="https://github.com/{username}" target="_blank" rel="noopener noreferrer" class="gh-link">
+      <a href="https://github.com/{username}" target="_blank" rel="noopener noreferrer" class="gh-link text-50">
         @{username}
       </a>
     </div>
@@ -182,8 +182,9 @@
 
 <style>
   .heatmap-wrapper {
+    margin-top: 0.75rem;
     padding: 1.25rem;
-    border-radius: var(--radius-large, 12px);
+    border-radius: var(--radius-large);
     background: var(--card-bg);
     animation: hfadeIn 0.5s ease-out both;
     animation-delay: 200ms;
@@ -209,7 +210,6 @@
     gap: 0.375rem;
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--text-75);
   }
 
   .gh-icon {
@@ -220,7 +220,6 @@
 
   .heatmap-total {
     font-size: 0.75rem;
-    color: var(--text-50);
   }
 
   .heatmap-loading {
@@ -248,12 +247,6 @@
     padding: 1rem 0;
   }
 
-  .heatmap-error a {
-    font-size: 0.8125rem;
-    color: var(--text-50);
-    transition: color 0.2s;
-  }
-
   .heatmap-error a:hover {
     color: var(--primary);
   }
@@ -273,7 +266,7 @@
   }
 
   .heatmap-scroll::-webkit-scrollbar-thumb {
-    background: var(--text-25);
+    background: var(--btn-regular-bg);
     border-radius: 3px;
   }
 
@@ -285,7 +278,6 @@
 
   .month-label {
     font-size: 0.625rem;
-    color: var(--text-50);
     white-space: nowrap;
     align-self: end;
     line-height: 1;
@@ -293,7 +285,6 @@
 
   .day-label {
     font-size: 0.625rem;
-    color: var(--text-50);
     text-align: right;
     padding-right: 4px;
     align-self: center;
@@ -308,7 +299,7 @@
   }
 
   .cell:hover {
-    outline: 1px solid var(--text-75);
+    outline: 1px solid var(--btn-content);
     outline-offset: -1px;
   }
 
@@ -338,7 +329,6 @@
     align-items: center;
     gap: 0.25rem;
     font-size: 0.625rem;
-    color: var(--text-50);
   }
 
   .legend .cell {
@@ -353,7 +343,6 @@
 
   .gh-link {
     font-size: 0.75rem;
-    color: var(--text-50);
     transition: color 0.2s;
   }
 
