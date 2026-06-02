@@ -1,72 +1,9 @@
 /* Page transition animations with Swup */
 html.is-changing .transition-swup-fade {
-    @apply transition-all duration-500
+    @apply transition-all duration-300 ease-out
 }
 html.is-animating .transition-swup-fade {
-    @apply opacity-0
-}
-
-html.is-animating .transition-swup-fade > * {
-    animation: split-out 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-}
-html.is-leaving .transition-swup-fade > * {
-    animation: split-in 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-}
-
-@keyframes split-out {
-    0% { transform: translateY(0) scaleY(1); opacity: 1; clip-path: inset(0 0 0 0); }
-    100% { transform: translateY(-20px) scaleY(0.97); opacity: 0; clip-path: inset(0 0 0 0); }
-}
-
-@keyframes split-in {
-    0% { transform: translateY(20px) scaleY(0.97); opacity: 0; clip-path: inset(0 0 0 0); }
-    100% { transform: translateY(0) scaleY(1); opacity: 1; clip-path: inset(0 0 0 0); }
-}
-
-/* Structuralist grid split overlay */
-html.is-animating #swup-container::before,
-html.is-animating #swup-container::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    height: 100%;
-    width: 50%;
-    z-index: 999;
-    background: var(--primary);
-    animation: split-cover 0.55s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-}
-html.is-animating #swup-container::before {
-    left: 0;
-    animation-name: split-cover-left;
-}
-html.is-animating #swup-container::after {
-    right: 0;
-    animation-name: split-cover-right;
-}
-
-@keyframes split-cover-left {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(0); }
-}
-@keyframes split-cover-right {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(0); }
-}
-
-html.is-leaving #swup-container::before {
-    animation: split-reveal-left 0.55s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-}
-html.is-leaving #swup-container::after {
-    animation: split-reveal-right 0.55s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-}
-
-@keyframes split-reveal-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-@keyframes split-reveal-right {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(100%); }
+    @apply opacity-0 translate-y-2
 }
 
 /* Fade-in animations for components */
@@ -113,4 +50,3 @@ html.is-leaving #swup-container::after {
 #post-container :nth-child(4) { animation-delay: calc(var(--content-delay) + 175ms) }
 #post-container :nth-child(5) { animation-delay: calc(var(--content-delay) + 250ms) }
 #post-container :nth-child(6) { animation-delay: calc(var(--content-delay) + 325ms) }
-

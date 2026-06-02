@@ -1,23 +1,15 @@
 ---
 import { getCollection } from "astro:content";
-import { getTagList, getCategoryList } from "../../utils/content-utils";
+import { getTagList } from "../../utils/content-utils";
 
 const allPosts = await getCollection("posts", ({ data }) => {
   return import.meta.env.PROD ? data.draft !== true : true;
 });
 
 const tags = await getTagList();
-const categories = await getCategoryList();
 
 const postCount = allPosts.length;
 const tagCount = tags.length;
-const categoryCount = categories.length;
-
-const totalWords = allPosts.reduce((sum, post) => {
-  const body = post.body || "";
-  const words = body.split(/\s+/).filter(Boolean).length;
-  return sum + words;
-}, 0);
 
 const firstPost = [...allPosts].sort(
   (a, b) => new Date(a.data.published).getTime() - new Date(b.data.published).getTime()
@@ -26,39 +18,23 @@ const siteBirth = firstPost ? new Date(firstPost.data.published) : new Date();
 const daysSince = Math.floor(
   (Date.now() - siteBirth.getTime()) / (1000 * 60 * 60 * 24)
 );
-
-const readingTimeMinutes = Math.max(1, Math.round(totalWords / 300));
 ---
 
 <div class="card-base p-3 onload-animation" style="animation-delay: 125ms">
-  <div class="text-sm font-bold text-75 mb-2.5 flex items-center gap-1.5">
-    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 7V3H3v15"/><path d="M21 9v12H3"/><path d="M7 14l4-4 4 4 4-4"/></svg>
-    站点统计
-  </div>
-  <div class="grid grid-cols-2 gap-2 text-xs">
-    <div class="bg-[var(--btn-regular-bg)] rounded-lg p-2 text-center">
-      <div class="font-bold text-lg text-[var(--primary)]">{postCount}</div>
-      <div class="text-50">文章</div>
+  <div class="flex items-center justify-between">
+    <div class="text-center flex-1">
+      <div class="text-lg font-bold text-[var(--primary)]">{postCount}</div>
+      <div class="text-[10px] text-50">文章</div>
     </div>
-    <div class="bg-[var(--btn-regular-bg)] rounded-lg p-2 text-center">
-      <div class="font-bold text-lg text-[var(--primary)]">{totalWords.toLocaleString()}</div>
-      <div class="text-50">总字数</div>
+    <div class="w-px h-6 bg-[var(--line-color)]"></div>
+    <div class="text-center flex-1">
+      <div class="text-lg font-bold text-[var(--primary)]">{tagCount}</div>
+      <div class="text-[10px] text-50">标签</div>
     </div>
-    <div class="bg-[var(--btn-regular-bg)] rounded-lg p-2 text-center">
-      <div class="font-bold text-lg text-[var(--primary)]">{tagCount}</div>
-      <div class="text-50">标签</div>
+    <div class="w-px h-6 bg-[var(--line-color)]"></div>
+    <div class="text-center flex-1">
+      <div class="text-lg font-bold text-[var(--primary)]">{daysSince}</div>
+      <div class="text-[10px] text-50">天</div>
     </div>
-    <div class="bg-[var(--btn-regular-bg)] rounded-lg p-2 text-center">
-      <div class="font-bold text-lg text-[var(--primary)]">{categoryCount}</div>
-      <div class="text-50">分类</div>
-    </div>
-  </div>
-  <div class="mt-2 flex items-center justify-between text-xs text-50 bg-[var(--btn-regular-bg)] rounded-lg px-2.5 py-1.5">
-    <span>已运行</span>
-    <span class="font-mono font-bold text-[var(--primary)]">{daysSince} 天</span>
-  </div>
-  <div class="mt-1 flex items-center justify-between text-xs text-50 bg-[var(--btn-regular-bg)] rounded-lg px-2.5 py-1.5">
-    <span>阅读时间</span>
-    <span class="font-mono font-bold text-[var(--primary)]">~{readingTimeMinutes} 分钟</span>
   </div>
 </div>

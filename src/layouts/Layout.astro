@@ -566,7 +566,6 @@ window.onresize = () => {
 </script>
 
 <script>
-/* 🥚 Easter Egg: click avatar 5 times → terminal HUD reboot */
 (function() {
 	let clickCount = 0;
 	let cooldown = false;
@@ -575,9 +574,7 @@ window.onresize = () => {
 		const target = e.target as HTMLElement | null;
 		const isAvatar = target?.id === 'profile-avatar-img' ||
 			target?.closest('#profile-avatar-link');
-
 		if (!isAvatar || cooldown) return;
-
 		clickCount++;
 		if (clickCount >= 5) {
 			clickCount = 0;
@@ -587,12 +584,14 @@ window.onresize = () => {
 	});
 
 	function triggerEasterEgg() {
+		const hue = getComputedStyle(document.documentElement).getPropertyValue('--primary-hue') || '250';
+		const accent = `hsl(${hue}, 75%, 70%)`;
+
 		const overlay = document.createElement('div');
-		overlay.id = 'easter-egg-overlay';
 		overlay.style.cssText = `
 			position: fixed; inset: 0; z-index: 999999;
-			background: #0a0a0a;
-			color: #00ff41;
+			background: var(--card-bg);
+			color: ${accent};
 			font-family: 'Courier New', monospace;
 			font-size: 14px;
 			display: flex;
@@ -603,46 +602,41 @@ window.onresize = () => {
 			transition: opacity 0.3s;
 		`;
 		document.body.appendChild(overlay);
-
 		requestAnimationFrame(() => { overlay.style.opacity = '1'; });
 
 		const lines = [
-			'[SYSTEM] DarkSpace Terminal v2.4.1',
-			'[SYSTEM] Initiating diagnostic sequence...',
-			'[SYSTEM] Architecture: x86_64 | Mode: Protected',
+			'DarkSpace Terminal // v2.4.1',
+			'Initiating sequence...',
 			'',
-			'[ 0.000] Booting from BIOS...',
 		];
 
 		const cmds = [
-			'[LOAD] kernel.bin ████████████ 100%',
-			'[LOAD] initrd.img ████████████ 100%',
-			'[LOAD] drivers/hud.sys ████████████ 100%',
-			'[CHECK] Memory: 0x00000000 - 0xFFFFFFFF [OK]',
-			'[CHECK] CPU: 16 cores @ 3.2GHz [OK]',
-			'[CHECK] Neural interface: not detected',
+			'> LOAD kernel.bin',
+			'  ████████████████████ 100%',
+			'> LOAD initrd.img',
+			'  ████████████████████ 100%',
+			'> CHECK memory',
+			'  0x00000000 - 0xFFFFFFFF [OK]',
+			'> CHECK cpu',
+			'  16 cores @ 3.2GHz [OK]',
+			'> CHECK neural',
+			'  interface: offline',
 			'',
-			'[WARN] Avatar synchronization lost',
-			'[INFO] Attempting HUD recalibration...',
+			'> CALIBRATE --hud',
+			'  crosshair alignment... ok',
+			'  reticle sync... ok',
+			'  vertical lock... ok',
 			'',
-			'> RECALIBRATE --force --hud-mode=terminal',
-			'  Initializing HUD overlay... ████████░░ 66%',
-			'  HUD overlay ready.',
-			'  Crosshair calibration... ████████████ 100%',
-			'  Vertical sync: locked.',
+			'Sequence complete.',
 			'',
-			'[OK] HUD recalibration complete.',
-			'[SYSTEM] Rebooting in 3...',
-			'[SYSTEM] Rebooting in 2...',
-			'[SYSTEM] Rebooting in 1...',
 		];
 
 		let globalDelay = 0;
 
-		function addLine(text: string) {
+		function addLine(text: string, color?: string) {
 			const p = document.createElement('div');
 			p.textContent = text;
-			p.style.cssText = 'opacity: 0; transform: translateY(-4px); transition: all 0.15s ease; margin-bottom: 0.15em;';
+			p.style.cssText = `opacity: 0; transform: translateY(-4px); transition: all 0.2s ease; margin-bottom: 0.1em; color: ${color || accent}`;
 			overlay.appendChild(p);
 			requestAnimationFrame(() => {
 				p.style.opacity = '1';
@@ -652,45 +646,44 @@ window.onresize = () => {
 
 		function addTypingLine(text: string) {
 			const p = document.createElement('div');
-			p.style.cssText = 'opacity: 0; margin-bottom: 0.15em;';
+			p.style.cssText = `opacity: 0; margin-bottom: 0.1em; color: ${accent}`;
 			overlay.appendChild(p);
 			requestAnimationFrame(() => { p.style.opacity = '1'; });
-
 			let idx = 0;
 			function type() {
 				if (idx <= text.length) {
 					p.textContent = text.slice(0, idx);
 					idx++;
-					setTimeout(type, 25 + Math.random() * 15);
+					setTimeout(type, 30 + Math.random() * 20);
 				}
 			}
-			setTimeout(type, 100);
+			setTimeout(type, 80);
 		}
 
 		lines.forEach((l, i) => {
-			setTimeout(() => addLine(l), i * 250);
+			setTimeout(() => addLine(l), i * 300);
 		});
-
-		globalDelay = lines.length * 250 + 400;
+		globalDelay = lines.length * 300 + 300;
 
 		cmds.forEach((cmd, i) => {
 			setTimeout(() => {
 				if (cmd.startsWith('>')) {
 					addTypingLine(cmd);
 				} else {
-					addLine(cmd);
+					addLine(cmd, cmd.includes('█') ? undefined : `hsl(${hue}, 45%, 65%)`);
 				}
-			}, globalDelay + i * 300);
+			}, globalDelay + i * 350);
 		});
 
-		const totalDelay = globalDelay + cmds.length * 300 + 1200;
+		const totalDelay = globalDelay + cmds.length * 350 + 1000;
 
 		setTimeout(() => {
 			const rebootText = document.createElement('div');
 			rebootText.style.cssText = `
 				position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-				font-size: 2rem; font-weight: bold; color: #00ff41;
-				text-shadow: 0 0 20px #00ff41, 0 0 60px #00ff41;
+				font-size: 2rem; font-weight: bold;
+				color: ${accent};
+				text-shadow: 0 0 20px ${accent}, 0 0 60px ${accent};
 				opacity: 0; transition: opacity 0.5s;
 			`;
 			rebootText.textContent = '⟳ REBOOTING';

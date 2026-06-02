@@ -6,6 +6,34 @@
   let mouseY = -100;
   let w = 0;
   let h = 0;
+  let primaryColor = "160, 120, 255";
+
+  onMount(() => {
+    const hue = getComputedStyle(document.documentElement).getPropertyValue("--primary-hue") || "250";
+    primaryColor = `hsl(${hue}, 80%, 65%)`;
+    const match = primaryColor.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    if (match) {
+      const [_, hue, sat, light] = match;
+      const temp = document.createElement("div");
+      temp.style.color = `hsl(${hue}, ${sat}%, ${light}%)`;
+      document.body.appendChild(temp);
+      const rgb = getComputedStyle(temp).color.match(/\d+/g);
+      document.body.removeChild(temp);
+      if (rgb) primaryColor = rgb.slice(0, 3).join(", ");
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseleave", leave);
+
+    return () => {
+      document.body.style.cursor = "";
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseleave", leave);
+    };
+  });
 
   function resize() {
     if (!canvas) return;
@@ -20,64 +48,51 @@
     draw(ctx);
   }
 
+  const ARM = 10;
+  const GAP = 3;
+  const DOT = 2;
+
   function draw(ctx) {
     ctx.clearRect(0, 0, w, h);
+    if (mouseX < 0 || mouseY < 0) return;
 
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.15)";
+    ctx.strokeStyle = `rgba(${primaryColor}, 0.25)`;
     ctx.lineWidth = 1;
+    ctx.lineCap = "round";
 
     ctx.beginPath();
-    ctx.moveTo(mouseX, 0);
-    ctx.lineTo(mouseX, h);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(0, mouseY);
-    ctx.lineTo(w, mouseY);
-    ctx.stroke();
-
-    const size = 24;
-    const gap = 6;
-
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.85)";
-    ctx.lineWidth = 1.5;
-
-    ctx.beginPath();
-    ctx.moveTo(mouseX - size, mouseY);
-    ctx.lineTo(mouseX - gap, mouseY);
+    ctx.moveTo(mouseX - ARM, mouseY);
+    ctx.lineTo(mouseX - GAP, mouseY);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(mouseX + gap, mouseY);
-    ctx.lineTo(mouseX + size, mouseY);
+    ctx.moveTo(mouseX + GAP, mouseY);
+    ctx.lineTo(mouseX + ARM, mouseY);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(mouseX, mouseY - size);
-    ctx.lineTo(mouseX, mouseY - gap);
+    ctx.moveTo(mouseX, mouseY - ARM);
+    ctx.lineTo(mouseX, mouseY - GAP);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(mouseX, mouseY + gap);
-    ctx.lineTo(mouseX, mouseY + size);
+    ctx.moveTo(mouseX, mouseY + GAP);
+    ctx.lineTo(mouseX, mouseY + ARM);
     ctx.stroke();
 
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.4)";
-    ctx.lineWidth = 0.5;
-    ctx.strokeRect(mouseX - gap, mouseY - gap, gap * 2, gap * 2);
+    ctx.fillStyle = `rgba(${primaryColor}, 0.4)`;
+    ctx.beginPath();
+    ctx.arc(mouseX, mouseY, DOT, 0, Math.PI * 2);
+    ctx.fill();
 
-    ctx.fillStyle = "rgba(0, 255, 255, 0.03)";
-    ctx.fillRect(mouseX - gap, mouseY - gap, gap * 2, gap * 2);
-
-    ctx.font = "10px monospace";
-    ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
-    ctx.textAlign = "left";
-    ctx.fillText(`${mouseX}, ${mouseY}`, mouseX + 14, mouseY + 4);
+    ctx.fillStyle = `rgba(${primaryColor}, 0.08)`;
+    ctx.beginPath();
+    ctx.arc(mouseX, mouseY, DOT * 3, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   function move(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    draw(ctx);
+    draw(canvas.getContext("2d"));
   }
 
   function leave() {
@@ -87,32 +102,21 @@
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, w, h);
   }
-
-  onMount(() => {
-    document.body.style.cursor = "none";
-    const style = document.createElement("style");
-    style.textContent = `
-      a, button, input, textarea, [contenteditable], [role="button"],
-      .btn-regular, .btn-plain, .btn-card, .link, label, select, summary,
-      [data-cursor-default]
-    `;
-    document.head.appendChild(style);
-
-    resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseleave", leave);
-
-    return () => {
-      document.body.style.cursor = "";
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseleave", leave);
-    };
-  });
 </script>
 
 <canvas
   bind:this={canvas}
   class="fixed inset-0 pointer-events-none z-[9999]"
 ></canvas>
+
+<style>
+  :global(body) {
+    cursor: none;
+  }
+  :global(a), :global(button), :global(input), :global(textarea),
+  :global([role="button"]), :global(.btn-regular), :global(.btn-plain),
+  :global(.btn-card), :global(.link), :global(label), :global(select),
+  :global(summary) {
+    cursor: none;
+  }
+</style>
