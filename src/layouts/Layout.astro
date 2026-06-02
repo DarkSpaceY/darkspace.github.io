@@ -4,7 +4,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
-import HUDCursor from "@components/widget/HUDCursor.svelte";
 import { profileConfig, siteConfig } from "@/config";
 import {
 	AUTO_MODE,
@@ -210,8 +209,6 @@ const bannerOffset =
 		</script>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
-		<!-- @ts-expect-error client:only is an Astro directive, not a prop -->
-		<HUDCursor client:only="svelte" />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
