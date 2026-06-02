@@ -3,7 +3,6 @@ import type { MarkdownHeading } from "astro";
 import Categories from "./Categories.astro";
 import GitHubStats from "./GitHubStats.astro";
 import MusicPlayer from "./MusicPlayer.svelte";
-import KuGouMusic from "./KuGouMusic.svelte";
 import Profile from "./Profile.astro";
 import SiteStats from "./SiteStats.astro";
 import Tag from "./Tags.astro";
@@ -20,8 +19,6 @@ const className = Astro.props.class;
         <Profile></Profile>
         <!-- @ts-expect-error client:only is an Astro directive, not a prop -->
         <MusicPlayer client:only="svelte"></MusicPlayer>
-        <!-- @ts-expect-error client:only is an Astro directive, not a prop -->
-        <KuGouMusic client:only="svelte"></KuGouMusic>
         <GitHubStats />
         <SiteStats />
     </div>
