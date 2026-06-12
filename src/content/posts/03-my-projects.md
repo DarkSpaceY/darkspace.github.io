@@ -59,11 +59,19 @@ lang: ''
 
 🔗 [GitHub](https://github.com/DarkSpaceY/Agent-WorkFlow)
 
-## 其他
+### CAA-based-emoAI
+
+**基于 CAA（Concept Activation Attribution）的情感强化 LLM 交互工具。**
+
+这个项目的核心想法是：通过 CAA 概念向量给大模型添加"情感激活加成"——让 AI 在回应时能够理解和带入特定的情感维度（愉悦/悲伤/愤怒/恐惧/中立）。实现了 5 种情绪触发模式（DA/SE/OX/COR/NE），支持 CLI 交互、探索模式、以及自定义配置文件。
+
+技术栈上基于 HuggingFace Transformers，用 PyTorch 做向量计算。算是我在 AI 情感/人格控制方面的一次实践尝试。
+
+🔗 [GitHub](https://github.com/DarkSpaceY/CAA-based-emoAI)
 
 ### NexLearn
 
-**一个交互式学习应用，用 TypeScript 写的。**
+**AI for Education 方向的交互式学习应用，用 TypeScript 写的。**
 
 GitHub 上目前是 v1.0，但实际上我已经在本地重写到了 v2.0——页面和操作逻辑全都改了一遍。等差不多了再推上来。
 
